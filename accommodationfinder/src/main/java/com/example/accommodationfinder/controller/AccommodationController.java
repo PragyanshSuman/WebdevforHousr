@@ -1,13 +1,20 @@
 package com.example.accommodationfinder.controller;
 
-import com.example.accommodationfinder.model.Accommodation;
-import com.example.accommodationfinder.service.AccommodationService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.example.accommodationfinder.model.Accommodation;
+import com.example.accommodationfinder.service.AccommodationService;
 
 @RestController
 @RequestMapping("/api/accommodations")
@@ -43,12 +50,5 @@ public class AccommodationController {
     public ResponseEntity<Accommodation> updateAccommodation(@PathVariable Long id, @RequestBody Accommodation accommodationDetails) {
         Accommodation updatedAccommodation = accommodationService.updateAccommodation(id, accommodationDetails);
         return ResponseEntity.ok(updatedAccommodation);
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('BROKER')")
-    public ResponseEntity<?> deleteAccommodation(@PathVariable Long id) {
-        accommodationService.deleteAccommodation(id);
-        return ResponseEntity.ok().build();
     }
 }

@@ -1,41 +1,18 @@
-import axios, { AxiosError } from 'axios';
-
-const API_URL = 'http://localhost:8080/api';
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: 'http://localhost:8080/api',
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
-api.interceptors.response.use(
-  (response) => response,
-  (error: AxiosError) => {
-    console.error('API Error:', error.response?.data || error.message);
-    return Promise.reject(error);
-  }
-);
+// ... rest of your API functions
 
 export const login = async (username: string, password: string) => {
-  try {
-    console.log('Attempting login with:', { username, password: '****' });
-    const response = await api.post('/auth/login', { username, password });
-    console.log('Login response:', response.data);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error('Login error:', error.response?.data);
-      console.error('Status:', error.response?.status);
-      console.error('Headers:', error.response?.headers);
-      if (error.response?.status === 401) {
-        throw new Error('Invalid username or password');
-      }
-      throw new Error(error.response?.data?.message || 'Login failed');
-    }
-    console.error('Unexpected error:', error);
-    throw error;
-  }
+  const response = await api.post('/auth/login', { username, password });
+  return response.data;
 };
 
 export const signup = async (username: string, email: string, password: string, role: 'USER' | 'BROKER') => {
@@ -49,16 +26,12 @@ export const signup = async (username: string, email: string, password: string, 
       console.error('Signup error:', error.response?.data);
       console.error('Status:', error.response?.status);
       console.error('Headers:', error.response?.headers);
-      if (error.response?.status === 401) {
-        throw new Error('Unauthorized: Please check your credentials or permissions');
-      }
       throw new Error(error.response?.data?.message || 'Signup failed');
     }
     console.error('Unexpected error:', error);
     throw error;
   }
 };
-
 export const getAllAccommodations = () => {
   return api.get('/accommodations');
 };

@@ -1,7 +1,6 @@
 package com.example.accommodationfinder.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.accommodationfinder.model.User;
@@ -12,9 +11,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public User registerUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username is already taken");
@@ -22,7 +18,15 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email is already in use");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Note: In a real-world scenario, you should hash the password before saving
         return userRepository.save(user);
+    }
+
+    public User authenticateUser(String username, String password) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
     }
 }

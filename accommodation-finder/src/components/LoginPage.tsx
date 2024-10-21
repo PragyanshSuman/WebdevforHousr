@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { toast } from 'react-toastify';
 import { useAuth } from '../App';
+import { login, signup } from '../services/api';
 
 const LoginPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
